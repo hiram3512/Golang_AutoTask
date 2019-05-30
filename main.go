@@ -1,5 +1,5 @@
 /*
-每10分钟自动更新Svn
+每天凌晨1点自动更新svn
 */
 
 package main
