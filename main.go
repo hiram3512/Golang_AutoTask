@@ -6,9 +6,12 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/axgle/mahonia"
@@ -20,18 +23,20 @@ var (
 )
 
 func main() {
+	reader := bufio.NewReader(os.Stdin)
 	fmt.Printf("输入Unity安装路径:")
-	fmt.Scanln(&unityPath)
-	unityPath = unityPath + "/Unity.exe"
+	text, _ := reader.ReadString('\n')
+	unityPath = strings.Replace(text, "\r\n", "", -1) + "/Unity.exe"
 	fmt.Printf("输入项目路径:")
-	fmt.Scanln(&projectPath)
-	fmt.Println("开始执行定时任务")
-	fmt.Println("每天凌晨1点自动更新svn\n每天凌晨2点自动载入unity")
+	text, _ = reader.ReadString('\n')
+	projectPath = text
+	fmt.Println("--------------------------------------\n开始执行定时任务\n每天凌晨1点自动更新svn\n每天凌晨2点自动载入unity\n--------------------------------------")
+
 	c := cron.New()
-	c.AddFunc("0 20 11 * * ?", func() {
+	c.AddFunc("0 25 14 * * ?", func() {
 		fmt.Println(time.Now(), "自动更新Svn")
 		out := bytes.NewBuffer(nil)
-		cmd := exec.Command("svn", "update", "D:/MySvn/QinUI")
+		cmd := exec.Command("svn", "update", projectPath)
 		cmd.Stdout = out
 		cmd.Run()
 
@@ -42,7 +47,7 @@ func main() {
 	c.Start()
 
 	c2 := cron.New()
-	c2.AddFunc("0 22 11 * * ?", func() {
+	c2.AddFunc("0 26 14 * * ?", func() {
 		fmt.Println(time.Now(), "自动载入Unity")
 		out := bytes.NewBuffer(nil)
 		cmd := exec.Command(unityPath, "-projectPath", projectPath)
