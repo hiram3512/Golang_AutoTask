@@ -39,14 +39,10 @@ func main() {
 		taskkill.Run()
 
 		fmt.Println(time.Now(), "自动更新Svn")
-		//out := bytes.NewBuffer(nil)
-		cmd := exec.Command("svn", "update", projectPath)
-		//cmd.Stdout = out
-		cmd.Run()
-
-		// enc := mahonia.NewDecoder("gb18030")
-		// goStr := enc.ConvertString(out.String())
-		// fmt.Println(goStr)
+		cmdCleanup := exec.Command("svn", "cleanup")
+		cmdCleanup.Run()
+		cmdUpdate := exec.Command("svn", "update", projectPath, "--accept postpone")
+		cmdUpdate.Run()
 	})
 	c.Start()
 
