@@ -30,24 +30,24 @@ func main() {
 	fmt.Printf("输入项目路径:")
 	text, _ = reader.ReadString('\n')
 	projectPath = strings.Replace(text, "\r\n", "", -1)
-	fmt.Println("--------------------------------------\n开始执行定时任务\n每天凌晨1点自动更新svn\n每天凌晨2点自动载入unity\n--------------------------------------")
+	fmt.Println("--------------------------------------\n开始执行定时任务\n每天凌晨1点自动更新svn\n每天凌晨3点自动载入unity\n--------------------------------------")
 
 	c := cron.New()
-	c.AddFunc("0 0 1 * * ?", func() {
+	c.AddFunc("0 0 3 * * ?", func() {
 		//强制关闭unity
 		taskkill := exec.Command("taskkill", "/f", "/im", "unity.exe")
 		taskkill.Run()
 
 		fmt.Println(time.Now(), "自动更新Svn")
-		cmdCleanup := exec.Command("svn", "cleanup")
+		cmdCleanup := exec.Command("svn", "cleanup", projectPath)
 		cmdCleanup.Run()
-		cmdUpdate := exec.Command("svn", "update", projectPath, "--accept postpone")
+		cmdUpdate := exec.Command("svn", "update", projectPath, "--accept", "postpone")
 		cmdUpdate.Run()
 	})
 	c.Start()
 
 	c2 := cron.New()
-	c2.AddFunc("0 0 2 * * ?", func() {
+	c2.AddFunc("0 0 3 * * ?", func() {
 		fmt.Println(time.Now(), "自动载入Unity")
 		out := bytes.NewBuffer(nil)
 		cmd := exec.Command(unityPath, "-projectPath", projectPath)
