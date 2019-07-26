@@ -33,7 +33,7 @@ func main() {
 	fmt.Println("--------------------------------------\n开始执行定时任务\n每天凌晨1点自动更新svn\n每天凌晨3点自动载入unity\n--------------------------------------")
 
 	c := cron.New()
-	c.AddFunc("0 0 3 * * ?", func() {
+	c.AddFunc("0 0 1 * * ?", func() {
 		//强制关闭unity
 		taskkill := exec.Command("taskkill", "/f", "/im", "unity.exe")
 		taskkill.Run()
