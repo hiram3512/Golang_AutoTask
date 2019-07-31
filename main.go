@@ -41,7 +41,7 @@ func main() {
 		fmt.Println(time.Now(), "自动更新Svn")
 		cmdCleanup := exec.Command("svn", "cleanup", projectPath)
 		cmdCleanup.Run()
-		cmdUpdate := exec.Command("svn", "update", projectPath, "--accept", "postpone")
+		cmdUpdate := exec.Command("svn", "update", projectPath, "--non-interactive")
 		cmdUpdate.Run()
 	})
 	c.Start()
